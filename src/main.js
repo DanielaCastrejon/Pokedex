@@ -1,5 +1,7 @@
 const listaPokemon = document.querySelector("#listaPokemon");
 
+const botonesHeader = document.querySelectorAll(".btn-header")
+
 let URL = "https://pokeapi.co/api/v2/pokemon/";
 
 for (let i = 1; i <= 151; i++) {
@@ -50,16 +52,25 @@ function monstrarPokemon(poke) {
 }
 
 
+botonesHeader.forEach(boton => boton.addEventListener("click", (Event) => {
+    const botonId = Event.currentTarget.id;
 
-/* <p class="pokemon-id">#025</p>
-                            <h2 class="pokemon-nombre">Pikachu</h2>
-                        </div>
-                        <div class="pokemon-tipo">
-                            <p class="electric">Electric</p>
-                            <p class=" fighting">Figthing</p>
-                        </div>
-                        <div class="pokemon-stats">
-                            <p class="stat">4m</p>
-                            <p class="stat">60kg</p>
-                        </div>
-                    </div>* */
+    listaPokemon.innerHTML = ""
+
+    for (let i = 1; i <= 151; i++) {
+        fetch(URL + i)
+        .then((response) => response.json())
+        .then(data => {
+
+            if(botonId === "ver-todos") {
+                monstrarPokemon(data);
+            } else {
+                const tipos = data.types.map(type => type.type.name);
+                if (tipos.some(tipo => tipo.includes(botonId))) {
+                    monstrarPokemon(data);
+                }
+            }
+        
+        })
+    }
+}))
